@@ -10,14 +10,50 @@ namespace Infrastructure.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        public void AddBook(Book book)
+        private List<Book> _books;
+
+        public BookRepository()
         {
-            throw new NotImplementedException();
+            _books = new List<Book>();
         }
 
-        public void GetBooks()
+        public void AddBook(Book book)
         {
-            throw new NotImplementedException();
+            _books.Add(book);
+        }
+
+        public void Delete(string title)
+        {
+            var book = GetByTitle(title);
+            if (book != null)
+            {
+                _books.Remove(book);
+            }
+        }
+
+        public List<Book> FilterBooks(Func<Book, bool> filter)
+        {
+            return _books.Where(filter).ToList();
+        }
+
+        public List<Book> FilterBooksByAuthor(string author)
+        {
+            return FilterBooks(x => x.Author == author);
+        }
+
+        public List<Book> FilterBooksByTitle(string title)
+        {
+            return FilterBooks(x=>x.Title == title);
+        }
+
+        public List<Book> GetBooks()
+        {
+            return _books;
+        }
+
+        public Book GetByTitle(string title)
+        {
+            return _books.First(x => x.Title == title);
         }
     }
 }

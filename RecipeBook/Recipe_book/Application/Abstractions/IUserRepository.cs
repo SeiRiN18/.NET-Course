@@ -10,7 +10,10 @@ namespace Application.Abstractions
     public interface IUserRepository
     {
         void AddUser(User user);
-        void RemoveUser(User user);
-        void GetUsers();
+        void RemoveUser(int id);
+        List<User> GetUsers();
+
+        User GetUserById(int id);
+        List<User> FindUsers(Predicate<User> predicate);
     }
 }

@@ -10,19 +10,38 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private List<User> _users;
+        public UserRepository() { 
+            _users = new List<User>();
+        }
+
         public void AddUser(User user)
         {
-            throw new NotImplementedException();
+            _users.Add(user);
         }
 
-        public void GetUsers()
+        public List<User> FindUsers(Predicate<User> predicate)
         {
-            throw new NotImplementedException();
+            return _users.FindAll(predicate);
         }
 
-        public void RemoveUser(User user)
+        public User GetUserById(int id)
         {
-            throw new NotImplementedException();
+            return _users.First(x => x.UserId == id);
+        }
+
+        public List<User> GetUsers()
+        {
+            return _users;
+        }
+
+        public void RemoveUser(int id)
+        {
+            var user = GetUserById(id);
+            if (user != null)
+            {
+                _users.Remove(user);
+            }
         }
     }
 }

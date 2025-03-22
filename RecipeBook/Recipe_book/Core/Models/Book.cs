@@ -30,13 +30,7 @@ namespace Core.Models
             get => _recipes;
         }
 
-        public Book(string title, string author, string description)
-        {
-            _title = title;
-            _author = author;
-            _description = description;
-            _recipes = new List<Recipe>();
-        }
+       
 
 
     }

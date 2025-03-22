@@ -23,13 +23,7 @@ namespace Core.Models
         {
             get => _instructions;
         }
-        public Recipe(string title, List<string> ingredients,
-            string instructions)
-        {
-            _title = title;
-            _ingredients = ingredients;
-            _instructions = instructions;
-        }
+       
 
     }
 }

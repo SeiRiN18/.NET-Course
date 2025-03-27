@@ -13,6 +13,12 @@ namespace Core.Models
         public string _description;
         public List<Recipe> _recipes;
 
+        public Book(string title, string author, string description)
+        {
+            _title = title;
+            _author = author;
+            _description = description;
+        }
         public string Title
         {
             get => _title;

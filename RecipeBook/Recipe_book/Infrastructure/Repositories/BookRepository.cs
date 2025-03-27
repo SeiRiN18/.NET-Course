@@ -10,16 +10,54 @@ namespace Infrastructure.Repositories
 {
     public class BookRepository : IBookRepository
     {
+        private const string FilePath = "Books.txt";
+
         private List<Book> _books;
 
+
+       
         public BookRepository()
         {
-            _books = new List<Book>();
+            _books = LoadBooks();
         }
+        private void SaveBooks()
+        {
+            using (StreamWriter sw = new StreamWriter(FilePath))
+            {
+                foreach (var book in _books)
+                {
+                    sw.WriteLine($"{book.Title}|{book.Author}|{book.Description}");
+                }
+            }
+        }
+        private List<Book> LoadBooks()
+        {
+            var books = new List<Book>();
+            if (!File.Exists(FilePath))
+            {
+                File.Create(FilePath).Close();
+                return books;
 
+            }
+            else
+            {
+                using (StreamReader sr = new StreamReader(FilePath))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        var parts = line.Split('|');
+                        books.Add(new Book(parts[0], parts[1], parts[2]));
+
+                    }
+                }
+            }
+            return books;
+        }
         public void AddBook(Book book)
         {
             _books.Add(book);
+            SaveBooks();
         }
 
         public void Delete(string title)
@@ -28,6 +66,7 @@ namespace Infrastructure.Repositories
             if (book != null)
             {
                 _books.Remove(book);
+                SaveBooks() ;
             }
         }
 

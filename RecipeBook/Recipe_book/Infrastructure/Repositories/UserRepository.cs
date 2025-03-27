@@ -10,14 +10,55 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
+
+        private const string FilePath = "Users.txt";
         private List<User> _users;
-        public UserRepository() { 
-            _users = new List<User>();
+        public UserRepository() {
+            _users = LoadUsers();
         }
 
+        private void SaveUsers()
+        {
+            using (StreamWriter sw = new StreamWriter(FilePath))
+            {
+                foreach (var user in _users)
+                {
+                    sw.WriteLine($"{user.UserId}.{user.Name}");
+                }
+            }
+        }
+        private List<User> LoadUsers()
+        {
+            var users = new List<User>();
+            if (!File.Exists(FilePath))
+            {
+                File.Create(FilePath).Close();
+            
+                return users;
+            }
+            else { 
+                using (StreamReader sr = new StreamReader(FilePath))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        var parts = line.Split('.');
+                        users.Add(new User {
+                            
+                            UserId = int.Parse(parts[0]),
+                            Name = parts[1]
+                        });
+                    }
+                }
+                
+            }
+            
+            return users;
+        }
         public void AddUser(User user)
         {
             _users.Add(user);
+            SaveUsers();
         }
 
         public List<User> FindUsers(Predicate<User> predicate)
@@ -41,6 +82,7 @@ namespace Infrastructure.Repositories
             if (user != null)
             {
                 _users.Remove(user);
+                SaveUsers();
             }
         }
     }

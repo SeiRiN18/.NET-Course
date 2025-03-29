@@ -22,35 +22,57 @@ namespace Infrastructure.Repositories
         }
         private void SaveBooks()
         {
-            using (StreamWriter sw = new StreamWriter(FilePath))
+            try
             {
-                foreach (var book in _books)
+                using (StreamWriter sw = new StreamWriter(FilePath,false))
                 {
-                    sw.WriteLine($"{book.Title}|{book.Author}|{book.Description}");
+                    foreach (var book in _books)
+                    {
+                        sw.WriteLine($"{book.Title}|{book.Author}|{book.Description}");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
         private List<Book> LoadBooks()
         {
             var books = new List<Book>();
-            if (!File.Exists(FilePath))
+            try
             {
-                File.Create(FilePath).Close();
-                return books;
-
-            }
-            else
-            {
-                using (StreamReader sr = new StreamReader(FilePath))
+                if (!File.Exists(FilePath))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                    try
                     {
-                        var parts = line.Split('|');
-                        books.Add(new Book(parts[0], parts[1], parts[2]));
+                        File.WriteAllText(FilePath,"");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    return books;
 
+                }
+                else
+                {
+                    using (StreamReader sr = new StreamReader(FilePath))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            books.Add(new Book(parts[0], parts[1], parts[2]));
+
+                        }
                     }
                 }
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
             return books;
         }

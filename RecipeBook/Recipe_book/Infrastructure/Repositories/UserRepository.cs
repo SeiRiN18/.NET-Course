@@ -19,38 +19,60 @@ namespace Infrastructure.Repositories
 
         private void SaveUsers()
         {
-            using (StreamWriter sw = new StreamWriter(FilePath))
+            try
             {
-                foreach (var user in _users)
+                using (StreamWriter sw = new StreamWriter(FilePath))
                 {
-                    sw.WriteLine($"{user.UserId}.{user.Name}");
+                    foreach (var user in _users)
+                    {
+                        sw.WriteLine($"{user.UserId}.{user.Name}");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
         private List<User> LoadUsers()
         {
             var users = new List<User>();
-            if (!File.Exists(FilePath))
+            try
             {
-                File.Create(FilePath).Close();
-            
-                return users;
-            }
-            else { 
-                using (StreamReader sr = new StreamReader(FilePath))
+                if (!File.Exists(FilePath))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                    try
                     {
-                        var parts = line.Split('.');
-                        users.Add(new User {
-                            
-                            UserId = int.Parse(parts[0]),
-                            Name = parts[1]
-                        });
+                        File.WriteAllText(FilePath, "");
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    return users;
                 }
-                
+                else
+                {
+                    using (StreamReader sr = new StreamReader(FilePath))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            var parts = line.Split('.');
+                            users.Add(new User
+                            {
+
+                                UserId = int.Parse(parts[0]),
+                                Name = parts[1]
+                            });
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
             
             return users;

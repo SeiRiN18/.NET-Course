@@ -10,16 +10,76 @@ namespace Infrastructure.Repositories
 {
     public class BookRepository : IBookRepository
     {
+        private const string FilePath = "Books.txt";
+
         private List<Book> _books;
 
+
+       
         public BookRepository()
         {
-            _books = new List<Book>();
+            _books = LoadBooks();
         }
+        private void SaveBooks()
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(FilePath,false))
+                {
+                    foreach (var book in _books)
+                    {
+                        sw.WriteLine($"{book.Title}|{book.Author}|{book.Description}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        private List<Book> LoadBooks()
+        {
+            var books = new List<Book>();
+            try
+            {
+                if (!File.Exists(FilePath))
+                {
+                    try
+                    {
+                        File.WriteAllText(FilePath,"");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    return books;
 
+                }
+                else
+                {
+                    using (StreamReader sr = new StreamReader(FilePath))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            books.Add(new Book(parts[0], parts[1], parts[2]));
+
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            return books;
+        }
         public void AddBook(Book book)
         {
             _books.Add(book);
+            SaveBooks();
         }
 
         public void Delete(string title)
@@ -28,6 +88,7 @@ namespace Infrastructure.Repositories
             if (book != null)
             {
                 _books.Remove(book);
+                SaveBooks() ;
             }
         }
 

@@ -1,10 +1,19 @@
-﻿namespace Recipe_book
+﻿
+
+using Core.Models;
+using Infrastructure.Repositories;
+
+namespace Recipe_book
+
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var userRepo = new UserRepository();
+            var bookRepo = new BookRepository();
+           
+
         }
     }
 }

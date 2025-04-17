@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class RecipeService : IBookRecipeService
+    public class RecipeService : IRecipeService
     {
+        private readonly IRecipeService _bookRecipeService;
+        public RecipeService(IRecipeService bookRecipeService)
+        {
+            _bookRecipeService = bookRecipeService;
+        }
         public void Publish()
         {
             throw new NotImplementedException();

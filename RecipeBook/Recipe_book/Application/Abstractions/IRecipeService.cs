@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Abstractions
 {
-    public interface IBookRecipeService
+    public interface IRecipeService
     {
         void Publish();
         void View();

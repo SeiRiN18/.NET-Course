@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class BookService : IBookRecipeService
+    public class BookService : IBookService
     {
+        private readonly IBookRepository _bookRepository;
+        public BookService(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
+
         public void Publish()
         {
             throw new NotImplementedException();
